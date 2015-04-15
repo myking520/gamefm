@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	<bean id="handler" class="com.ashishpaliwal.udp.mina.server.ServerHandler" />
+	<bean id="snmpCodecFilter" class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+		<constructor-arg>
+			<bean class="com.ashishpaliwal.udp.mina.snmp.SNMPCodecFactory" />
+		</constructor-arg>
+	</bean>
+	<bean id="filterChainBuilder"
+		class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+		<property name="filters">
+			<map>
+				<entry key="codec" value-ref="snmpCodecFilter" />
+			</map>
+		</property>
+	</bean>
+	
+
+</beans>
