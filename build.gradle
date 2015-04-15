@@ -1,0 +1,47 @@
+ ext {
+    springVersion = "4.1.6.RELEASE"
+	minaVersion = "2.0.9"
+	}
+
+ configure(allprojects) {
+    apply plugin: 'eclipse'
+	apply plugin: 'java'
+    repositories {
+        mavenCentral()
+    }
+    sourceSets {
+        main {
+            java.srcDirs "src/java/main"
+        }
+    }
+
+	
+	compileJava { 
+		sourceCompatibility=1.6
+		 targetCompatibility=1.6
+	}
+
+	dependencies {
+		compile fileTree("lib")
+	}
+
+}
+project('gamefm-net') {
+    description = 'gamefm-net'
+  	sourceSets {
+   		 main {
+       	 java {
+             srcDirs  "src/java/main"
+			
+        	}
+		 resources {
+           
+        }
+   	 	}
+		}
+dependencies {
+		compile fileTree("lib")
+		compile "org.springframework:spring-context:${springVersion}"
+		compile "org.apache.mina:mina-core:${minaVersion}"
+	}
+  }
