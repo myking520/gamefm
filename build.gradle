@@ -43,5 +43,6 @@ dependencies {
 		compile fileTree("lib")
 		compile "org.springframework:spring-context:${springVersion}"
 		compile "org.apache.mina:mina-core:${minaVersion}"
+		compile fileTree("../lib")
 	}
   }
