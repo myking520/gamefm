@@ -8,7 +8,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 public class SpringContext {
 	private static SpringContext factory = new SpringContext();
 
-	private static String configLocation = "config" + File.separator + "app*.xml";
+	public static String configLocation = "config" + File.separator + "app*.xml";
 
 	private static ApplicationContext ctx = new FileSystemXmlApplicationContext(configLocation);
 
