@@ -1,16 +1,13 @@
 package com.myking520.github;
 
-import java.util.concurrent.Executors;
-
-import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.filterchain.IoFilterChainBuilder;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 public class BootStrap {
 	private ProtocolCodecFactory protocolCodecFactory;
 	private NioSocketAcceptor gameAcceptor;
+	private IoFilterChainBuilder ioFilterChainBuilder;
 	public void init(){
 //		gameAcceptor = new NioSocketAcceptor(Runtime.getRuntime().availableProcessors()*2+1);
 //		gameAcceptor.getSessionConfig().setIdleTime(IdleStatus.READER_IDLE,10);
