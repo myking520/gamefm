@@ -1,4 +1,4 @@
-package com.myking520.github.codec;
+package com.myking520.github.codec.protocolbuffer;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;

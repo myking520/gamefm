@@ -1,4 +1,4 @@
-package com.myking520.github.codec;
+package com.myking520.github.codec.lua;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

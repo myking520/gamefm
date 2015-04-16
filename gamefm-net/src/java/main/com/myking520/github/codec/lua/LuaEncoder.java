@@ -1,4 +1,4 @@
-package com.myking520.github.codec;
+package com.myking520.github.codec.lua;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.future.IoFuture;
