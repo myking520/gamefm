@@ -1,8 +1,27 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
-	<bean id="handler" class="com.myking520.github.handler.DispatchHandler" />
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<context:property-placeholder location="config/app.properties" />
+	<!-- 操作处理 -->
+	<bean id="actionDispatch" class="com.myking520.github.action.ActionDispatch" >
+		<property name="actions">
+			<list></list>
+		</property>
+	</bean>
+	<!-- 客户端管理 -->
+	<bean id="clientManager" class="com.myking520.github.client.impl.ClientManager"></bean>
+	<!-- 游戏处理 -->
+	<bean id="handler"  class="com.myking520.github.handler.GameHandler">
+		<property name="actionDispatch" ref="actionDispatch"></property>
+		<property name="clientManager" ref="clientManager"></property>
+	</bean>
 	<bean id="protocolCodecFilter" class="org.apache.mina.filter.codec.ProtocolCodecFilter">
 		<constructor-arg>
 			<ref bean="codecFactory" />
@@ -12,8 +31,12 @@
 		<property name="decoder" ref="decoder" />
 		<property name="encoder" ref="encoder" />
 	</bean>
-	<bean id="decoder" class="com.myking520.github.codec.protocolbuffer.ProtocolBufferDecoder"> </bean>
-	<bean id="encoder" class="com.myking520.github.codec.protocolbuffer.ProtocolBufferEncoder"> </bean>
+	<bean id="decoder"
+		class="com.myking520.github.codec.protocolbuffer.ProtocolBufferDecoder">
+	</bean>
+	<bean id="encoder"
+		class="com.myking520.github.codec.protocolbuffer.ProtocolBufferEncoder">
+	</bean>
 	<bean id="filterChainBuilder"
 		class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
 		<property name="filters">
@@ -21,5 +44,14 @@
 				<entry key="codec" value-ref="protocolCodecFilter" />
 			</map>
 		</property>
+	</bean>
+	<bean id="gameServerBindAddress" class="java.net.InetSocketAddress">
+		<constructor-arg value="${gameServer.host}" type="java.lang.String" />
+		<constructor-arg value="${gameServer.port}" type="int" />
+	</bean>
+	<bean id="gameNioSocketAcceptor" class="com.myking520.github.GameNioSocketAcceptor" init-method="init">
+		<property name="ioFilterChainBuilder" ref="filterChainBuilder"></property>
+		<property name="ioHandler" ref="handler"></property>
+		<property name="socketAddress" ref="gameServerBindAddress"></property>
 	</bean>
 </beans>
