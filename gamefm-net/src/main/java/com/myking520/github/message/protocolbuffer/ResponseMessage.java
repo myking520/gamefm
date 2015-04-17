@@ -14,6 +14,9 @@ public class ResponseMessage implements IResponseMessage {
 		this.state = state;
 		this.data = message.toByteArray();
 	}
+	public ResponseMessage(int actionId, int state, MessageLite lite) {
+		this((short)actionId,(short)state,lite);
+	}
 	/* (non-Javadoc)
 	 * @see com.myking520.github.message.protocolbuffer.IResponseMessage#getActionId()
 	 */
