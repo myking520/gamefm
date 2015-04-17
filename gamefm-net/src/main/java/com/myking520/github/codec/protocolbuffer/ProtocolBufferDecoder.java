@@ -9,7 +9,7 @@ import com.myking520.github.message.RequestMessage;
 
 /**
  * <pre>
- * BEFORE DECODE (300 bytes)       AFTER DECODE (308 bytes)
+ * BEFORE DECODE       AFTER DECODE 
  * +----------+               +-----------+-------------+-------+
  * |    Data  |-------------->| actionID  | datalength  |  Data |
  * |  (bytes) |               |	short     | short       | bytes |  

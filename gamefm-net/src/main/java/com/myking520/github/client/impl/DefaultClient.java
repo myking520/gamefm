@@ -26,7 +26,7 @@ public class DefaultClient implements IClient{
 	/**
 	 * <body>
 	 * <pre>
-	 *      BEFORE ENCODE 			 AFTER ENCODE (308 bytes)  
+	 *      BEFORE ENCODE 			 AFTER ENCODE 
 	 * +-----------+-------------+------------+    	    +----------+               
 	 * | actionID  | datalength  |  Data 	  | ----->  |    Data  |
 	 * |	short  | short       | bytes(300) |    	    |   (bytes)|                
