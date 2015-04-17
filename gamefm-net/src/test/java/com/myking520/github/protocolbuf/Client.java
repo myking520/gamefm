@@ -29,9 +29,13 @@ public class Client extends IoHandlerAdapter{
 		connector.setHandler(new Client());
 		ConnectFuture future = connector.connect((SocketAddress)SpringContext.getBean("gameServerBindAddress"));
 		future.awaitUninterruptibly();
+		
+		
+		
+		
 		DefaultClient client=new DefaultClient(future.getSession());
-		Person login=Test.Person.newBuilder().setId(1).setName("2").build();
-		IResponseMessage msg=new ResponseMessage(1, 1,login);
+		Person persion=Test.Person.newBuilder().setId(1).setName("2").build();
+		IResponseMessage msg=new ResponseMessage(1, 1,persion);
 		client.write(msg);
 
 	}
