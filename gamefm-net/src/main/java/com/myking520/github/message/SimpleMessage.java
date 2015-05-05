@@ -28,19 +28,7 @@ public class SimpleMessage implements IResponseMessage {
 		return data;
 	}
 
-	public static void main(String[] args) {
-		for (int i = 10000000; i < 10000000+100 ; i++) {
-			byte[] b = int2bytes(i);
-			long f = bytes2int(b);
-			System.out.println(f);
-		}
-		System.out.println("========================");
-		for (int i = -10000000; i < -10000000+ 100; i++) {
-			byte[] b = int2bytes(i);
-			long f = bytes2int(b);
-			System.out.println(f);
-		}
-	}
+
 
 	// value=53480640->000000011 00110000 00001100 11000000
 	// 0xFF ->11111111
