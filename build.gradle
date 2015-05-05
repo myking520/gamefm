@@ -2,6 +2,7 @@
     springVersion = "4.1.6.RELEASE"
 	minaVersion = "2.0.9"
 	protobuf_java="2.6.1"
+	org_apache_poi="3.10-FINAL"
 	}
 
  configure(allprojects) {
@@ -46,5 +47,22 @@ dependencies {
 		compile "org.apache.mina:mina-core:${minaVersion}"
 		compile "com.google.protobuf:protobuf-java:${protobuf_java}"
 		compile fileTree("../lib")
+	}
+  }
+project('gamefm-common') {
+    description = 'gamefm-net'
+  	sourceSets {
+   		 main {
+       	 java {
+             srcDirs  "src/java/main"
+			
+        	}
+		 resources {
+           
+        }
+   	 	}
+		}
+dependencies {
+	compile "org.apache.poi:poi:${org_apache_poi}"
 	}
   }
