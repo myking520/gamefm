@@ -52,6 +52,7 @@ public class ProtocolBufferDecoder extends CumulativeProtocolDecoder {
 				return false;
 			} else {
 				bytes = new byte[dataSize];
+				ioBuffer.get(bytes, 0, dataSize);
 				message = createMessage(actionID, bytes);
 				if (message != null) {
 					// return message to handler to handle
