@@ -21,7 +21,10 @@ public class Parser {
 		look = lex.scan();
 		switch (look.tag) {
 		case Tag.REQUEST:
+			this.match(Tag.REQUEST);
+			this.match(Tag.LEFTBRACE);
 			this.pRequest();
+			this.match(Tag.RIGHTBRACE);
 			break;
 		case Tag.RESPONSE:
 
@@ -43,8 +46,6 @@ public class Parser {
 	}
 
 	private void pRequest() {
-		this.look = lex.scan();
-		this.match(Tag.LEFTBRACE);
 		this.match(Tag.PUBLIC);
 		RequestMethod request = new RequestMethod();
 		if (this.look == null) {
@@ -60,6 +61,8 @@ public class Parser {
 		this.methodParam();
 		this.match(')');
 		this.match(';');
+		if(this.look.tag!=Tag.RIGHTBRACE)
+			this.pRequest();
 	}
 
 	private Node methodParam() {
@@ -117,9 +120,14 @@ public class Parser {
 		else
 			throw new RuntimeException("语法错误！第" + lex.getLine() + "行 需要\"" + (char) t + "\"");
 	}
-
 	public static void main(String[] args) throws IOException {
 		Parser p = new Parser(new Lexer());
-		p.prog("request{ public static void aa(int  bb,aacc<aa,bb<aaaa,bb<aaa>>,cc<aaa,aac,aaa>> s);");
+		StringBuffer sb=new StringBuffer();
+		sb.append("request{");
+		sb.append("public static void aa(int  bb,aacc<aa,bb<aaaa,bb<aaa>>,cc<aaa,aac,aaa>> s);");
+		sb.append("public static void aa(int  bb,aacc<aa,bb<aaaa,bb<aaa>>,cc<aaa,aac,aaa>> s);");
+		sb.append("public static void aa(int  bb,aacc<aa,bb<aaaa,bb<aaa>>,cc<aaa,aac,aaa>> s);");
+		sb.append("}");
+		p.prog(sb.toString());
 	}
 }
