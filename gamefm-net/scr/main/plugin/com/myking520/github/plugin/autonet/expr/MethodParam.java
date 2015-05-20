@@ -21,7 +21,10 @@ public class MethodParam {
 		StringBuffer sb=new StringBuffer();
 		for(int i=0;i<methodParamType.size();i++){
 			sb.append(methodParamType.get(i));
+			sb.append(",");
+			
 		}
+		sb.deleteCharAt(sb.length()-1);
 		return sb.toString();
 	}
 	

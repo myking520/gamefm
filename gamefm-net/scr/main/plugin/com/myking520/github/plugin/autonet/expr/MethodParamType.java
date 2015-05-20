@@ -9,60 +9,68 @@ public class MethodParamType extends Node {
 	protected Token paramType;
 	protected Token paramValue;
 	protected List<MethodParamType> methodParams = new ArrayList<MethodParamType>();
-	//不是泛型
-	private boolean notAnnotation=false;
-	
+	// 不是泛型
+	private boolean notAnnotation = false;
+
 	public boolean isNotAnnotation() {
 		return notAnnotation;
 	}
+
 	public void setNotAnnotation(boolean notAnnotation) {
 		this.notAnnotation = notAnnotation;
 	}
+
 	public Token getParamValue() {
 		return paramValue;
 	}
+
 	public void setParamValue(Token paramValue) {
 		this.paramValue = paramValue;
 	}
+
 	public Token getParamType() {
 		return paramType;
 	}
+
 	public void setParamType(Token paramType) {
 		this.paramType = paramType;
 	}
+
 	public List<MethodParamType> getMethodParams() {
 		return methodParams;
 	}
+
 	public void setMethodParams(List<MethodParamType> methodParams) {
 		this.methodParams = methodParams;
 	}
+
 	public String toString() {
-		
-		StringBuffer sb=new StringBuffer();
-		if(this.paramType!=null){
+		StringBuffer sb = new StringBuffer();
+		if (this.paramType != null) {
 			sb.append(this.paramType);
 		}
-
-		if(methodParams.isEmpty()){
+		if (methodParams.isEmpty()) {
+			if (this.paramValue != null) {
+				sb.append(" ");
+				sb.append(this.paramValue);
+				return sb.toString();
+			}
 			return sb.toString();
 		}
-		if(notAnnotation){
+		if (notAnnotation) {
 			sb.append(",");
-		}else{
+		} else {
 			sb.append("<");
 		}
-	
-			
-		
-		for(int i=0;i<methodParams.size();i++){
-			MethodParamType pt=methodParams.get(i);
+		for (int i = 0; i < methodParams.size(); i++) {
+			MethodParamType pt = methodParams.get(i);
 			sb.append(pt);
 		}
-		if(!notAnnotation){
+		if (!notAnnotation) {
 			sb.append(">");
 		}
-	
-		if(this.paramValue!=null){
+
+		if (this.paramValue != null) {
 			sb.append(" ");
 			sb.append(this.paramValue);
 			return sb.toString();

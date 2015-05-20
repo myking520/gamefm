@@ -156,7 +156,7 @@ public class Parser {
 //		sb.append("public static void aa1(int  a,b<c,d<e,f<g>>,h<i,j,k>> s);");
 //		sb.append("public static void aa2(int  a,b<c,d<e,f<g>>,h<i,j,k>> s);");
 //		sb.append("public static void aa3(int  a,b<c,d<e,f<g>>,h<i,j,k>> s);");
-		sb.append("public static void aa3(a<b,c<d,e<f,g>>> s);");
+		sb.append("public static void aa3(a<b,c<d,e<f,g>>> s,aa i);");
 		sb.append("}");
 		p.prog(sb.toString());
 		System.out.println(p.requestBlock);
