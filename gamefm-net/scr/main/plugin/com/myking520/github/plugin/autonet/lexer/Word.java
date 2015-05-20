@@ -7,6 +7,9 @@ public class Word extends Token {
 	public static final Word wResponse = new Word("response", Tag.RESPONSE);
 	public static final Word wVoid = new Word("void", Tag.VOID);
 	public static final Word wStatic = new Word("static", Tag.STATIC);
+	public static final  Word wLeftbrace = new Word("{", Tag.LEFTBRACE);
+	public static final  Word wRightbrace = new Word("}", Tag.RIGHTBRACE);
+	public static final  Word wINT = new Word("int", Tag.INT);
 	public String txt = "";
 
 	public Word(String txt, int t) {

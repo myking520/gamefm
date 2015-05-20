@@ -1,0 +1,11 @@
+package com.myking520.github.messageProcess;
+import com.myking520.github.plugin.autonet.lexer.Lexer;
+Request{
+	public void login(String name,int age);
+	public static void login(Test user);
+	public void login(List<Test> user);
+}
+Response{
+	public static void resLogin(String name,int age);
+	public static void resLogin(Test user);
+}
