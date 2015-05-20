@@ -1,8 +1,28 @@
 package com.myking520.github.plugin.autonet.expr;
 
-import com.myking520.github.plugin.autonet.lexer.Word;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MethodParam extends Node{
+public class MethodParam {
+	private List<MethodParamType> methodParamType=new ArrayList<MethodParamType>();
+
+	public List<MethodParamType> getMethodParamType() {
+		return methodParamType;
+	}
+
+
+	public void addMethodParamType(MethodParamType methodParamType){
+		this.methodParamType.add(methodParamType);
+	}
+
+
+	@Override
+	public String toString() {
+		StringBuffer sb=new StringBuffer();
+		for(int i=0;i<methodParamType.size();i++){
+			sb.append(methodParamType.get(i));
+		}
+		return sb.toString();
+	}
 	
-	private  Word paramName;
 }
