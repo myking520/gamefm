@@ -1,14 +1,12 @@
-package com.myking520.github.action;
+package com.myking520.github.reader;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Type;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.myking520.github.DataConstant;
+import com.myking520.github.DataObjField;
+import com.myking520.github.DataObjInfo;
 
-import com.myking520.github.client.IClient;
-import com.myking520.github.message.RequestMessage;
 /**
 Copyright (c) 2015, kongguoan
 All rights reserved.
@@ -35,21 +33,37 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class ActionDispatch {
-	 final static Logger logger = LoggerFactory.getLogger(ActionDispatch.class);
+public class ColumnReader extends AnnotationVisitor {
+	private DataObjField dbObjField;
+	private DataObjInfo dbObjInfo;
 
-	private Map<Integer, IAction> actions = new HashMap<Integer, IAction>();
-	public void setActions(List<IAction> actionlt) {
-		for (IAction m : actionlt) {
-			this.actions.put(m.getActionId()/IAction.SPLIT, m);
+	public ColumnReader(int api, AnnotationVisitor av, DataObjField dbObjField, DataObjInfo dbObjInfo) {
+		super(api, av);
+		this.dbObjField = dbObjField;
+		this.dbObjInfo = dbObjInfo;
+	}
+
+	@Override
+	public void visit(String name, Object value) {
+		super.visit(name, value);
+		if (DataConstant.COLUMND_SERDESERCLASS.equals(name)) {
+			dbObjField.setSerDeSerClass((Type) value);
+		} else if (DataConstant.COLUMND_INDEX.equals(name)) {
+			Integer ivalue = (Integer) value;
+			if (ivalue < 1) {
+				throw new RuntimeException("字段索引错误。只能从1开始[" + dbObjInfo.getName() + "." + dbObjField.getName() + "]");
+			}
+			dbObjField.setDbindex(ivalue);
+		} else if (DataConstant.COLUMND_CLONEMECLASS.equals(name)) {
+			dbObjField.setCloneMeClass((Type) value);
 		}
 	}
-	public void process(IClient session, RequestMessage msg)  {
-		IAction nm = actions.get(msg.getActionID()/IAction.SPLIT);
-		if (nm != null) {
-			nm.doAction(msg);
-		} else {
-			logger.error(" action id is not found ->{} ", msg.getActionID());
-		}
+
+	@Override
+	public void visitEnd() {
+		super.visitEnd();
+		if (dbObjField.getDbindex() > 0)
+			dbObjInfo.addDBObjField(dbObjField);
 	}
+
 }

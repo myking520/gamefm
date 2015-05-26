@@ -1,14 +1,8 @@
-package com.myking520.github.action;
+package com.myking520.github.column;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.myking520.github.IDataHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.myking520.github.client.IClient;
-import com.myking520.github.message.RequestMessage;
 /**
 Copyright (c) 2015, kongguoan
 All rights reserved.
@@ -35,21 +29,22 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class ActionDispatch {
-	 final static Logger logger = LoggerFactory.getLogger(ActionDispatch.class);
+public interface ISer<P> {
+	/**
+	 * 序列化
+	 * 
+	 * @param p
+	 * @param filedName
+	 * @param dataHolder
+	 */
+	public void ser(P p, String filedName, int index, IDataHolder dataHolder);
 
-	private Map<Integer, IAction> actions = new HashMap<Integer, IAction>();
-	public void setActions(List<IAction> actionlt) {
-		for (IAction m : actionlt) {
-			this.actions.put(m.getActionId()/IAction.SPLIT, m);
-		}
-	}
-	public void process(IClient session, RequestMessage msg)  {
-		IAction nm = actions.get(msg.getActionID()/IAction.SPLIT);
-		if (nm != null) {
-			nm.doAction(msg);
-		} else {
-			logger.error(" action id is not found ->{} ", msg.getActionID());
-		}
-	}
+	/**
+	 * 反序列化
+	 * 
+	 * @param filedName
+	 * @param dataHolder
+	 * @return
+	 */
+	public P deSer(String filedName, int index, IDataHolder dataHolder);
 }

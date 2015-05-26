@@ -1,14 +1,11 @@
-package com.myking520.github.action;
+package com.myking520.github;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.myking520.github.writer.POWriter;
 
-import com.myking520.github.client.IClient;
-import com.myking520.github.message.RequestMessage;
 /**
 Copyright (c) 2015, kongguoan
 All rights reserved.
@@ -35,21 +32,43 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class ActionDispatch {
-	 final static Logger logger = LoggerFactory.getLogger(ActionDispatch.class);
+public class VORWFacotory extends ClassLoader {
+	private static VORWFacotory vorwfacotory = new VORWFacotory();
+	private static Map<Class<? extends IVO>, Class<IVORW>> vorwClases = new HashMap<Class<? extends IVO>, Class<IVORW>>();
 
-	private Map<Integer, IAction> actions = new HashMap<Integer, IAction>();
-	public void setActions(List<IAction> actionlt) {
-		for (IAction m : actionlt) {
-			this.actions.put(m.getActionId()/IAction.SPLIT, m);
+	private VORWFacotory() {
+
+	}
+
+	public static IVORW getVORW(Class<? extends IVO> voclaz) {
+		Class<IVORW> claz = vorwClases.get(voclaz);
+		if (claz == null) {
+			try {
+				POWriter pw = new POWriter(voclaz);
+				byte[] bytes = pw.toClassBytes();
+				claz = (Class<IVORW>) vorwfacotory.defineClass(null, bytes, 0, bytes.length);
+				vorwClases.put(voclaz, claz);
+			} catch (IOException e) {
+				throw new RuntimeException("初始失败", e);
+			}
+		}
+		try {
+			return claz.newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException("初始失败", e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("初始失败", e);
 		}
 	}
-	public void process(IClient session, RequestMessage msg)  {
-		IAction nm = actions.get(msg.getActionID()/IAction.SPLIT);
-		if (nm != null) {
-			nm.doAction(msg);
-		} else {
-			logger.error(" action id is not found ->{} ", msg.getActionID());
-		}
+
+	/**
+	 * 读写对象
+	 * 
+	 * @param vo
+	 * @return
+	 */
+	public static IVORW getVORW(IVO vo) {
+		Class<IVO> voclaz = (Class<IVO>) vo.getClass();
+		return getVORW(voclaz);
 	}
 }

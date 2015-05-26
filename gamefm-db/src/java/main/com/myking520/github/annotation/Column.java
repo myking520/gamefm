@@ -1,14 +1,14 @@
-package com.myking520.github.action;
+package com.myking520.github.annotation;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.myking520.github.column.ICloneMe;
+import com.myking520.github.column.ISer;
 
-import com.myking520.github.client.IClient;
-import com.myking520.github.message.RequestMessage;
+
 /**
 Copyright (c) 2015, kongguoan
 All rights reserved.
@@ -35,21 +35,36 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class ActionDispatch {
-	 final static Logger logger = LoggerFactory.getLogger(ActionDispatch.class);
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Column {
+	/**
+	 * @return 序号
+	 */
+	int index();
 
-	private Map<Integer, IAction> actions = new HashMap<Integer, IAction>();
-	public void setActions(List<IAction> actionlt) {
-		for (IAction m : actionlt) {
-			this.actions.put(m.getActionId()/IAction.SPLIT, m);
-		}
-	}
-	public void process(IClient session, RequestMessage msg)  {
-		IAction nm = actions.get(msg.getActionID()/IAction.SPLIT);
-		if (nm != null) {
-			nm.doAction(msg);
-		} else {
-			logger.error(" action id is not found ->{} ", msg.getActionID());
-		}
-	}
+	/**
+	 * @return 字段名
+	 */
+	String name() default "";
+
+	/**
+	 * @return 解析方式
+	 */
+	Class<? extends ISer> serDeSerClass() default ISer.class;
+
+	/**
+	 * @return 克隆字段
+	 */
+	Class<? extends ICloneMe> cloneMeClass() default ICloneMe.class;
+
+	/**
+	 * @return 是否忽略写入数据库
+	 */
+	boolean writeIgnore() default false;
+
+	/**
+	 * @return 是否忽略从数据库读取
+	 */
+	boolean readIgnore() default false;
 }
