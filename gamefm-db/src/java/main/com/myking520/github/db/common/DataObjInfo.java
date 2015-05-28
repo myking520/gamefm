@@ -1,4 +1,4 @@
-package com.myking520.github;
+package com.myking520.github.db.common;
 
 import java.util.ArrayList;
 import java.util.Collections;

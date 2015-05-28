@@ -1,4 +1,4 @@
-package com.myking520.github.writer;
+package com.myking520.github.db.common.writer;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,14 +14,14 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import com.myking520.github.DataConstant;
-import com.myking520.github.DataObjField;
-import com.myking520.github.DataObjInfo;
-import com.myking520.github.reader.VOReader;
-import com.myking520.github.writer.datahodlerfield.IntLsRW;
-import com.myking520.github.writer.datahodlerfield.IntRW;
-import com.myking520.github.writer.datahodlerfield.LongRW;
-import com.myking520.github.writer.datahodlerfield.StringWR;
+import com.myking520.github.db.common.DataConstant;
+import com.myking520.github.db.common.DataObjField;
+import com.myking520.github.db.common.DataObjInfo;
+import com.myking520.github.db.common.reader.VOReader;
+import com.myking520.github.db.common.writer.datahodlerfield.IntLsRW;
+import com.myking520.github.db.common.writer.datahodlerfield.IntRW;
+import com.myking520.github.db.common.writer.datahodlerfield.LongRW;
+import com.myking520.github.db.common.writer.datahodlerfield.StringWR;
 
 /**
 Copyright (c) 2015, kongguoan

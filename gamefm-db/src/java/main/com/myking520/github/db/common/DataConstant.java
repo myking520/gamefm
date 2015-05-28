@@ -1,13 +1,13 @@
-package com.myking520.github;
+package com.myking520.github.db.common;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import com.myking520.github.annotation.Column;
-import com.myking520.github.cloneme.CloneMeFactory;
-import com.myking520.github.column.ICloneMe;
-import com.myking520.github.column.ISer;
-import com.myking520.github.serDeser.SerDserFacotry;
+import com.myking520.github.db.common.annotation.Column;
+import com.myking520.github.db.common.cloneme.CloneMeFactory;
+import com.myking520.github.db.common.column.ICloneMe;
+import com.myking520.github.db.common.column.ISer;
+import com.myking520.github.db.common.serDeser.SerDserFacotry;
 
 /**
 Copyright (c) 2015, kongguoan

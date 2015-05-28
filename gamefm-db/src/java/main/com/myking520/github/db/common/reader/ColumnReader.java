@@ -1,11 +1,11 @@
-package com.myking520.github.reader;
+package com.myking520.github.db.common.reader;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Type;
 
-import com.myking520.github.DataConstant;
-import com.myking520.github.DataObjField;
-import com.myking520.github.DataObjInfo;
+import com.myking520.github.db.common.DataConstant;
+import com.myking520.github.db.common.DataObjField;
+import com.myking520.github.db.common.DataObjInfo;
 
 /**
 Copyright (c) 2015, kongguoan

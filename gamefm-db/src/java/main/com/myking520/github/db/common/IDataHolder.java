@@ -1,4 +1,4 @@
-package com.myking520.github;
+package com.myking520.github.db.common;
 
 /**
 Copyright (c) 2015, kongguoan

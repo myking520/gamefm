@@ -1,4 +1,4 @@
-package com.myking520.github.column;
+package com.myking520.github.db.common.writer;
 
 /**
 Copyright (c) 2015, kongguoan
@@ -26,6 +26,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public interface ICloneMe<P> {
-	public P cloneMe(P p, String filedName, int index);
+public class DataObjectWriter {
+
 }

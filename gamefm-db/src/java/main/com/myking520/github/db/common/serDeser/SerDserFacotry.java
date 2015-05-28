@@ -1,9 +1,9 @@
-package com.myking520.github.writer;
+package com.myking520.github.db.common.serDeser;
 
-import org.objectweb.asm.MethodVisitor;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.myking520.github.DataObjField;
-import com.myking520.github.DataObjInfo;
+import com.myking520.github.db.common.column.ISer;
 
 /**
 Copyright (c) 2015, kongguoan
@@ -31,8 +31,23 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public interface IDataHolderFieldRW {
-	public void write(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo);
+public class SerDserFacotry {
+	private static Map<String, ISer> serDesers = new HashMap<String, ISer>();
 
-	public void read(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo);
+	private SerDserFacotry() {
+
+	}
+
+	public final static ISer getISer(String clazname) {
+		ISer<?> ser = serDesers.get(clazname);
+		if (ser == null) {
+			try {
+				Class<ISer> claz = (Class<ISer>) Class.forName(clazname);
+				serDesers.put(clazname, ser = claz.newInstance());
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return ser;
+	}
 }

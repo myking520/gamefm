@@ -1,10 +1,4 @@
-package com.myking520.github;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.myking520.github.writer.POWriter;
+package com.myking520.github.db.common;
 
 /**
 Copyright (c) 2015, kongguoan
@@ -32,43 +26,34 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class VORWFacotory extends ClassLoader {
-	private static VORWFacotory vorwfacotory = new VORWFacotory();
-	private static Map<Class<? extends IVO>, Class<IVORW>> vorwClases = new HashMap<Class<? extends IVO>, Class<IVORW>>();
-
-	private VORWFacotory() {
-
-	}
-
-	public static IVORW getVORW(Class<? extends IVO> voclaz) {
-		Class<IVORW> claz = vorwClases.get(voclaz);
-		if (claz == null) {
-			try {
-				POWriter pw = new POWriter(voclaz);
-				byte[] bytes = pw.toClassBytes();
-				claz = (Class<IVORW>) vorwfacotory.defineClass(null, bytes, 0, bytes.length);
-				vorwClases.put(voclaz, claz);
-			} catch (IOException e) {
-				throw new RuntimeException("初始失败", e);
-			}
-		}
-		try {
-			return claz.newInstance();
-		} catch (InstantiationException e) {
-			throw new RuntimeException("初始失败", e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException("初始失败", e);
-		}
-	}
-
+public interface IVORW extends Cloneable {
 	/**
-	 * 读写对象
+	 * VO->PO
 	 * 
 	 * @param vo
-	 * @return
 	 */
-	public static IVORW getVORW(IVO vo) {
-		Class<IVO> voclaz = (Class<IVO>) vo.getClass();
-		return getVORW(voclaz);
-	}
+	public void write2VO(IVO vo);
+
+	/**
+	 * PO->VO
+	 * 
+	 * @param vo
+	 */
+	public void readFromVO(IVO vo);
+
+	/**
+	 * PO->dataHoder
+	 * 
+	 * @param dataHoder
+	 */
+	public void write2Dataholder(IDataHolder dataHoder);
+
+	/**
+	 * dataHoder->PO
+	 * 
+	 * @param dataHoder
+	 */
+	public void readFromDataholder(IDataHolder dataHoder);
+
+	public IVORW clone() throws CloneNotSupportedException;
 }

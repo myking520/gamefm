@@ -1,7 +1,4 @@
-package com.myking520.github.column;
-
-import com.myking520.github.IDataHolder;
-
+package com.myking520.github.db.common;
 
 /**
 Copyright (c) 2015, kongguoan
@@ -29,22 +26,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public interface ISer<P> {
-	/**
-	 * 序列化
-	 * 
-	 * @param p
-	 * @param filedName
-	 * @param dataHolder
-	 */
-	public void ser(P p, String filedName, int index, IDataHolder dataHolder);
+public interface IVO {
 
-	/**
-	 * 反序列化
-	 * 
-	 * @param filedName
-	 * @param dataHolder
-	 * @return
-	 */
-	public P deSer(String filedName, int index, IDataHolder dataHolder);
 }

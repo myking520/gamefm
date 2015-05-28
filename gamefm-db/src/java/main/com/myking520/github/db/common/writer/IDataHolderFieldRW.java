@@ -1,4 +1,9 @@
-package com.myking520.github.writer;
+package com.myking520.github.db.common.writer;
+
+import org.objectweb.asm.MethodVisitor;
+
+import com.myking520.github.db.common.DataObjField;
+import com.myking520.github.db.common.DataObjInfo;
 
 /**
 Copyright (c) 2015, kongguoan
@@ -26,6 +31,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class DataObjectWriter {
+public interface IDataHolderFieldRW {
+	public void write(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo);
 
+	public void read(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo);
 }

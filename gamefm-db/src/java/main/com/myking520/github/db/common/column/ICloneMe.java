@@ -1,12 +1,4 @@
-package com.myking520.github.writer.datahodlerfield;
-
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-
-import com.myking520.github.DataConstant;
-import com.myking520.github.DataObjField;
-import com.myking520.github.DataObjInfo;
-import com.myking520.github.writer.IDataHolderFieldRW;
+package com.myking520.github.db.common.column;
 
 /**
 Copyright (c) 2015, kongguoan
@@ -34,27 +26,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class IntRW implements IDataHolderFieldRW, Opcodes {
-	@Override
-	public void write(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo) {
-		mv.visitVarInsn(ALOAD, 1);
-		mv.visitLdcInsn(dbObjField.getName());
-		mv.visitIntInsn(BIPUSH, dbObjField.getDbindex());
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitFieldInsn(GETFIELD, dbObjInfo.getDynName(), dbObjField.getName(), "I");
-		mv.visitMethodInsn(INVOKEINTERFACE, DataConstant.IDATAHOLDER_INTERNALNAME, "putInt", "(Ljava/lang/String;II)V",
-				true);
-	}
-
-	@Override
-	public void read(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo) {
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitVarInsn(ALOAD, 1);
-		mv.visitLdcInsn(dbObjField.getName());
-		mv.visitIntInsn(BIPUSH, dbObjField.getDbindex());
-		mv.visitMethodInsn(INVOKEINTERFACE, DataConstant.IDATAHOLDER_INTERNALNAME, "getInt", "(Ljava/lang/String;I)I",
-				true);
-		mv.visitFieldInsn(PUTFIELD, dbObjInfo.getDynName(), dbObjField.getName(), "I");
-	}
-
+public interface ICloneMe<P> {
+	public P cloneMe(P p, String filedName, int index);
 }

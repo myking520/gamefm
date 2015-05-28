@@ -1,6 +1,12 @@
-package com.myking520.github;
+package com.myking520.github.db.common.cloneme;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.myking520.github.db.common.column.ICloneMe;
 
 /**
+ * 字段克隆<p>
 Copyright (c) 2015, kongguoan
 All rights reserved.
 
@@ -26,34 +32,38 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public interface IVORW extends Cloneable {
-	/**
-	 * VO->PO
-	 * 
-	 * @param vo
-	 */
-	public void write2VO(IVO vo);
+public class CloneMeFactory {
+	private CloneMeFactory() {
+
+	}
+
+	private static Map<String, ICloneMe> clonefs = new HashMap<String, ICloneMe>();
 
 	/**
-	 * PO->VO
+	 * 添加到clone工厂
 	 * 
-	 * @param vo
+	 * @param cloneMe
 	 */
-	public void readFromVO(IVO vo);
+	public static void addCloneMe(ICloneMe cloneMe) {
+		clonefs.put(cloneMe.getClass().getName(), cloneMe);
+	}
 
-	/**
-	 * PO->dataHoder
-	 * 
-	 * @param dataHoder
-	 */
-	public void write2Dataholder(IDataHolder dataHoder);
+	public static ICloneMe getCloneMe(String cloneMe) {
+		ICloneMe cm = clonefs.get(cloneMe);
+		if (cm == null) {
+			try {
+				cm = (ICloneMe) Class.forName(cloneMe).newInstance();
+				clonefs.put(cloneMe, cm);
+				return cm;
+			} catch (InstantiationException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("没有找到cloneMe->" + cloneMe);
+			}
+		}
+		return cm;
+	}
 
-	/**
-	 * dataHoder->PO
-	 * 
-	 * @param dataHoder
-	 */
-	public void readFromDataholder(IDataHolder dataHoder);
-
-	public IVORW clone() throws CloneNotSupportedException;
 }

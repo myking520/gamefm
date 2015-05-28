@@ -1,4 +1,13 @@
-package com.myking520.github;
+package com.myking520.github.db.common.reader;
+
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
+import org.objectweb.asm.FieldVisitor;
+
+import com.myking520.github.db.common.DataConstant;
+import com.myking520.github.db.common.DataObjField;
+import com.myking520.github.db.common.DataObjInfo;
+
 
 /**
 Copyright (c) 2015, kongguoan
@@ -26,6 +35,28 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public interface IVO {
+public class FieldReader extends FieldVisitor {
+	private DataObjField dbObjField;
+	private DataObjInfo dbObjInfo;
 
+	public FieldReader(int api, FieldVisitor fv, DataObjInfo dbObjInfo, DataObjField dbObjField) {
+		super(api, fv);
+		this.dbObjField = dbObjField;
+		this.dbObjInfo = dbObjInfo;
+	}
+
+	@Override
+	public void visitAttribute(Attribute attr) {
+		// TODO Auto-generated method stub
+		super.visitAttribute(attr);
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+		AnnotationVisitor av = super.visitAnnotation(desc, visible);
+		if (desc.equals(DataConstant.COLUMNDESCRIPTOR)) {
+			av = new ColumnReader(super.api, av, dbObjField, dbObjInfo);
+		}
+		return av;
+	}
 }

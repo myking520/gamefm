@@ -1,8 +1,8 @@
-package com.myking520.github.writer;
+package com.myking520.github.db.common.writer;
 
 import org.objectweb.asm.MethodVisitor;
 
-import com.myking520.github.DataObjField;
+import com.myking520.github.db.common.DataObjField;
 
 /**
 Copyright (c) 2015, kongguoan

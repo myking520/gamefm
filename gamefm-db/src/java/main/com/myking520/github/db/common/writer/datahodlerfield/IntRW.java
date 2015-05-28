@@ -1,13 +1,12 @@
-package com.myking520.github.reader;
+package com.myking520.github.db.common.writer.datahodlerfield;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
-import com.myking520.github.DataConstant;
-import com.myking520.github.DataObjField;
-import com.myking520.github.DataObjInfo;
-
+import com.myking520.github.db.common.DataConstant;
+import com.myking520.github.db.common.DataObjField;
+import com.myking520.github.db.common.DataObjInfo;
+import com.myking520.github.db.common.writer.IDataHolderFieldRW;
 
 /**
 Copyright (c) 2015, kongguoan
@@ -35,28 +34,27 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class FieldReader extends FieldVisitor {
-	private DataObjField dbObjField;
-	private DataObjInfo dbObjInfo;
-
-	public FieldReader(int api, FieldVisitor fv, DataObjInfo dbObjInfo, DataObjField dbObjField) {
-		super(api, fv);
-		this.dbObjField = dbObjField;
-		this.dbObjInfo = dbObjInfo;
+public class IntRW implements IDataHolderFieldRW, Opcodes {
+	@Override
+	public void write(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo) {
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitLdcInsn(dbObjField.getName());
+		mv.visitIntInsn(BIPUSH, dbObjField.getDbindex());
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, dbObjInfo.getDynName(), dbObjField.getName(), "I");
+		mv.visitMethodInsn(INVOKEINTERFACE, DataConstant.IDATAHOLDER_INTERNALNAME, "putInt", "(Ljava/lang/String;II)V",
+				true);
 	}
 
 	@Override
-	public void visitAttribute(Attribute attr) {
-		// TODO Auto-generated method stub
-		super.visitAttribute(attr);
+	public void read(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo) {
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitLdcInsn(dbObjField.getName());
+		mv.visitIntInsn(BIPUSH, dbObjField.getDbindex());
+		mv.visitMethodInsn(INVOKEINTERFACE, DataConstant.IDATAHOLDER_INTERNALNAME, "getInt", "(Ljava/lang/String;I)I",
+				true);
+		mv.visitFieldInsn(PUTFIELD, dbObjInfo.getDynName(), dbObjField.getName(), "I");
 	}
 
-	@Override
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		AnnotationVisitor av = super.visitAnnotation(desc, visible);
-		if (desc.equals(DataConstant.COLUMNDESCRIPTOR)) {
-			av = new ColumnReader(super.api, av, dbObjField, dbObjInfo);
-		}
-		return av;
-	}
 }

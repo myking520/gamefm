@@ -1,12 +1,9 @@
-package com.myking520.github.cloneme;
+package com.myking520.github.db.common.column;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.myking520.github.db.common.IDataHolder;
 
-import com.myking520.github.column.ICloneMe;
 
 /**
- * 字段克隆<p>
 Copyright (c) 2015, kongguoan
 All rights reserved.
 
@@ -32,38 +29,22 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class CloneMeFactory {
-	private CloneMeFactory() {
-
-	}
-
-	private static Map<String, ICloneMe> clonefs = new HashMap<String, ICloneMe>();
+public interface ISer<P> {
+	/**
+	 * 序列化
+	 * 
+	 * @param p
+	 * @param filedName
+	 * @param dataHolder
+	 */
+	public void ser(P p, String filedName, int index, IDataHolder dataHolder);
 
 	/**
-	 * 添加到clone工厂
+	 * 反序列化
 	 * 
-	 * @param cloneMe
+	 * @param filedName
+	 * @param dataHolder
+	 * @return
 	 */
-	public static void addCloneMe(ICloneMe cloneMe) {
-		clonefs.put(cloneMe.getClass().getName(), cloneMe);
-	}
-
-	public static ICloneMe getCloneMe(String cloneMe) {
-		ICloneMe cm = clonefs.get(cloneMe);
-		if (cm == null) {
-			try {
-				cm = (ICloneMe) Class.forName(cloneMe).newInstance();
-				clonefs.put(cloneMe, cm);
-				return cm;
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException("没有找到cloneMe->" + cloneMe);
-			}
-		}
-		return cm;
-	}
-
+	public P deSer(String filedName, int index, IDataHolder dataHolder);
 }

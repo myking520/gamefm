@@ -1,12 +1,13 @@
-package com.myking520.github.writer.datahodlerfield;
+package com.myking520.github.db.common.annotation;
 
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.myking520.github.DataConstant;
-import com.myking520.github.DataObjField;
-import com.myking520.github.DataObjInfo;
-import com.myking520.github.writer.IDataHolderFieldRW;
+import com.myking520.github.db.common.column.ICloneMe;
+import com.myking520.github.db.common.column.ISer;
+
 
 /**
 Copyright (c) 2015, kongguoan
@@ -34,27 +35,36 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class IntLsRW implements IDataHolderFieldRW, Opcodes {
-	@Override
-	public void write(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo) {
-		mv.visitVarInsn(ALOAD, 1);
-		mv.visitLdcInsn(dbObjField.getName());
-		mv.visitIntInsn(BIPUSH, dbObjField.getDbindex());
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitFieldInsn(GETFIELD, dbObjInfo.getDynName(), dbObjField.getName(), "[I");
-		mv.visitMethodInsn(INVOKEINTERFACE, DataConstant.IDATAHOLDER_INTERNALNAME, "putIntList",
-				"(Ljava/lang/String;I[I)V", true);
-	}
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Column {
+	/**
+	 * @return 序号
+	 */
+	int index();
 
-	@Override
-	public void read(MethodVisitor mv, DataObjField dbObjField, DataObjInfo dbObjInfo) {
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitVarInsn(ALOAD, 1);
-		mv.visitLdcInsn(dbObjField.getName());
-		mv.visitIntInsn(BIPUSH, dbObjField.getDbindex());
-		mv.visitMethodInsn(INVOKEINTERFACE, DataConstant.IDATAHOLDER_INTERNALNAME, "getIntList",
-				"(Ljava/lang/String;I)[I", true);
-		mv.visitFieldInsn(PUTFIELD, dbObjInfo.getDynName(), dbObjField.getName(), "[I");
-	}
+	/**
+	 * @return 字段名
+	 */
+	String name() default "";
 
+	/**
+	 * @return 解析方式
+	 */
+	Class<? extends ISer> serDeSerClass() default ISer.class;
+
+	/**
+	 * @return 克隆字段
+	 */
+	Class<? extends ICloneMe> cloneMeClass() default ICloneMe.class;
+
+	/**
+	 * @return 是否忽略写入数据库
+	 */
+	boolean writeIgnore() default false;
+
+	/**
+	 * @return 是否忽略从数据库读取
+	 */
+	boolean readIgnore() default false;
 }

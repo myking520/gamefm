@@ -1,4 +1,4 @@
-package com.myking520.github;
+package com.myking520.github.db.common;
 
 import org.objectweb.asm.Type;
 
