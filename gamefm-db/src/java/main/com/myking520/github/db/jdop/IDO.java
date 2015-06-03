@@ -47,10 +47,11 @@ public interface IDO {
 	 * 
 	 * @param obj
 	 */
-	public void setSouce(Object obj);
+	public <O> void setSouce(O obj);
+	public <O> O getSource();
 
 	/**
 	 * @return 新建
 	 */
-	public IDO newDO();
+	public <O extends IDO> O newDO();
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public interface IJDOP {
-	public <O>  void save(O o);
+	public <O>  void save(O... o);
 	public  <O> void update(O... u);
 	public  <O> void delete(O... d);
 	public <O>  List<O> getAll(Class claz);

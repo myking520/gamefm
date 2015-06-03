@@ -1,5 +1,6 @@
 package com.myking520.github.db.annotations;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -9,7 +10,7 @@ import com.myking520.github.db.jdop.annotations.Entity;
 import com.myking520.github.db.jdop.annotations.PK;
 
 @Entity(name = "children")
-public class CObj implements IVO{
+public class CObj implements IVO,Serializable{
 	@PK
 	@Column(index = 1, name = "id")
 	private int id;
@@ -50,4 +51,10 @@ public class CObj implements IVO{
 	public void setMid(int mid) {
 		this.mid = mid;
 	}
+
+	@Override
+	public String toString() {
+		return "CObj [id=" + id + ", name=" + name + ", fid=" + fid + ", mid=" + mid + "]";
+	}
+	
 }
