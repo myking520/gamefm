@@ -49,7 +49,7 @@ public class CObj implements IVO,Serializable{
 	}
 
 	public void setMid(int mid) {
-		this.mid = mid;
+		this.mid = mid*100;
 	}
 
 	@Override

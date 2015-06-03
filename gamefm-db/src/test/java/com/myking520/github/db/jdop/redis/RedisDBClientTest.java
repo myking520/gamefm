@@ -49,10 +49,21 @@ public class RedisDBClientTest {
 		DefaultData defaultdata=new DefaultData(table1,null);
 		List<CObj> lt=client.getAll(defaultdata);
 		IDO ido=defaultdata.getTableInfo().getIDOCreater();
-		System.out.println(lt.get(0).getId());
 		ido.setSouce(lt.get(0));
 		 defaultdata=new DefaultData(table1	,ido);
 		client.delete(defaultdata);
+	}
+	@Test
+	public void updateFK(){
+		DefaultData defaultdata=new DefaultData(table1,null);
+		List<CObj> lt=client.getAll(defaultdata);
+		CObj cobj=	lt.get(0);
+		int old=cobj.getMid();
+		cobj.setMid(33333);
+		IDO ido=defaultdata.getTableInfo().getIDOCreater();
+		ido.setSouce(cobj);
+		 defaultdata=new DefaultData(table1	,ido);
+		client.updateFK(defaultdata, "fk2", old);
 	}
 	private DefaultData[] random(int num){
 	
