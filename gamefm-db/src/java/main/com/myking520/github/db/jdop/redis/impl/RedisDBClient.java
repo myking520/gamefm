@@ -92,6 +92,7 @@ public class RedisDBClient implements IDBClient {
 		} catch (Exception e) {
 			logger.error("", e);
 			error = true;
+			throw e;
 		} finally {
 			if (sj != null) {
 				if (error) {
@@ -141,6 +142,7 @@ public class RedisDBClient implements IDBClient {
 		} catch (Exception e) {
 			logger.error("", e);
 			error = true;
+			throw e;
 		} finally {
 			if (sj != null) {
 				if (error) {
@@ -212,6 +214,7 @@ public class RedisDBClient implements IDBClient {
 		} catch (Exception e) {
 			logger.error("", e);
 			error = true;
+			throw e;
 		} finally {
 			if (sj != null) {
 				if (error) {
@@ -240,6 +243,7 @@ public class RedisDBClient implements IDBClient {
 		} catch (Exception e) {
 			logger.error("", e);
 			error = true;
+			throw e;
 		} finally {
 			if (sj != null) {
 				if (error) {
@@ -249,7 +253,6 @@ public class RedisDBClient implements IDBClient {
 				}
 			}
 		}
-		return ret;
 	}
 
 	@Override
@@ -280,6 +283,7 @@ public class RedisDBClient implements IDBClient {
 		} catch (Exception e) {
 			logger.error("", e);
 			error = true;
+			throw e;
 		} finally {
 			if (sj != null) {
 				if (error) {
@@ -302,6 +306,7 @@ public class RedisDBClient implements IDBClient {
 		} catch (Exception e) {
 			logger.error("", e);
 			error = true;
+			throw e;
 		} finally {
 			if (sj != null) {
 				if (error) {
@@ -311,7 +316,6 @@ public class RedisDBClient implements IDBClient {
 				}
 			}
 		}
-		return null;
 	}
 
 }

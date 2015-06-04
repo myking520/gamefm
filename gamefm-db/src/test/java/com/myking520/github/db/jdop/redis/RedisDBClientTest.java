@@ -6,7 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.myking520.github.db.annotations.CObj;
-import com.myking520.github.db.jdop.IDO;
 import com.myking520.github.db.jdop.impl.DefaultData;
 import com.myking520.github.db.jdop.redis.impl.RedisDBClient;
 
@@ -45,7 +44,7 @@ public class RedisDBClientTest {
 		table1 = new RedisTableInfo();
 		table1.setFkNames(new String[] { "fk1", "fk2" });
 		table1.setTableName("tbTest");
-		table1.setDoCreater(new RedisDO());
+		table1.setIpkfkgetter(new COBJPK());
 
 	}
 

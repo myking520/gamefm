@@ -1,5 +1,9 @@
 package com.myking520.github.db.jdop.redis.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import com.myking520.github.db.common.IDataHolder;
 
 public class RedisDataHodler implements IDataHolder {
@@ -45,6 +49,14 @@ public class RedisDataHodler implements IDataHolder {
 		return null;
 	}
 	public byte[] toBytes(){
+		try {
+			ByteArrayOutputStream bout = new ByteArrayOutputStream();
+			ObjectOutputStream oout = new ObjectOutputStream(bout);
+			oout.writeObject(this.souce);
+			return  bout.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 }
