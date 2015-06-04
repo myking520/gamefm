@@ -1,6 +1,5 @@
 package com.myking520.github.db.common;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,31 +33,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class VORWFacotory extends ClassLoader {
 	private static VORWFacotory vorwfacotory = new VORWFacotory();
-	private static Map<Class<? extends IVO>, Class<IVORW>> vorwClases = new HashMap<Class<? extends IVO>, Class<IVORW>>();
+	private static Map<Class<? extends IVO>, IVORW> vorwClases = new HashMap<Class<? extends IVO>,IVORW>();
 
 	private VORWFacotory() {
 
 	}
 
 	public static IVORW getVORW(Class<? extends IVO> voclaz) {
-		Class<IVORW> claz = vorwClases.get(voclaz);
-		if (claz == null) {
+		IVORW vorw= vorwClases.get(voclaz);
+		if (vorw == null) {
 			try {
 				POWriter pw = new POWriter(voclaz);
 				byte[] bytes = pw.toClassBytes();
-				claz = (Class<IVORW>) vorwfacotory.defineClass(null, bytes, 0, bytes.length);
-				vorwClases.put(voclaz, claz);
-			} catch (IOException e) {
+				Class<IVORW> claz = (Class<IVORW>) vorwfacotory.defineClass(null, bytes, 0, bytes.length);
+				vorw= claz.newInstance();
+				vorwClases.put(voclaz, vorw);
+			} catch (Exception e) {
 				throw new RuntimeException("初始失败", e);
 			}
 		}
-		try {
-			return claz.newInstance();
-		} catch (InstantiationException e) {
-			throw new RuntimeException("初始失败", e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException("初始失败", e);
-		}
+		return vorw.newIVORW();
 	}
 
 	/**

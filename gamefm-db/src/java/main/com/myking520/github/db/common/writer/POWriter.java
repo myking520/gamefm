@@ -1,6 +1,5 @@
 package com.myking520.github.db.common.writer;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +17,7 @@ import com.myking520.github.db.common.DataConstant;
 import com.myking520.github.db.common.DataObjField;
 import com.myking520.github.db.common.DataObjInfo;
 import com.myking520.github.db.common.reader.VOReader;
+import com.myking520.github.db.common.writer.datahodlerfield.BooleanRW;
 import com.myking520.github.db.common.writer.datahodlerfield.IntLsRW;
 import com.myking520.github.db.common.writer.datahodlerfield.IntRW;
 import com.myking520.github.db.common.writer.datahodlerfield.LongRW;
@@ -53,13 +53,13 @@ public class POWriter implements Opcodes {
 	private ClassWriter cw;
 	private DataObjInfo dbObjInfo;
 	private MethodVisitor mv = null;
-	private FieldVisitor fv = null;
 	private static Map<String, IDataHolderFieldRW> dataHolderFieldRWs = new HashMap<String, IDataHolderFieldRW>();
 	{
 		dataHolderFieldRWs.put(Type.INT_TYPE.getDescriptor(), new IntRW());
 		dataHolderFieldRWs.put(Type.LONG_TYPE.getDescriptor(), new LongRW());
 		dataHolderFieldRWs.put(Type.getDescriptor(String.class), new StringWR());
 		dataHolderFieldRWs.put(Type.getDescriptor(int[].class), new IntLsRW());
+		dataHolderFieldRWs.put(Type.BOOLEAN_TYPE.getDescriptor(), new BooleanRW());
 	}
 
 	public POWriter(DataObjInfo dbObjInfo) {
@@ -77,7 +77,24 @@ public class POWriter implements Opcodes {
 		this.buildMethodwrite2Dataholder();
 		this.buildMethodReadFromDataholder();
 		this.buildMethodClone();
+		this.buildMethodnewIVORW();
 		cw.visitEnd();
+	}
+
+	private void buildMethodnewIVORW() {
+		mv = cw.visitMethod(ACC_PUBLIC, "newIVORW", "()"+ DataConstant.IVORW_DESCRIPTOR, null, null);
+		mv.visitCode();
+		Label l0 = new Label();
+		mv.visitLabel(l0);
+		mv.visitTypeInsn(NEW, dbObjInfo.getDynName());
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESPECIAL, dbObjInfo.getDynName(), "<init>", "()V", false);
+		mv.visitInsn(ARETURN);
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitLocalVariable("this", this.dbObjInfo.getDynDesc(), null, l0, l1, 0);
+		mv.visitMaxs(2, 1);
+		mv.visitEnd();
 	}
 
 	private void buildClass() {
@@ -127,8 +144,13 @@ public class POWriter implements Opcodes {
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitVarInsn(ALOAD, 2);
 			DataObjField dbf = fields.get(i);
-			mv.visitMethodInsn(INVOKEVIRTUAL, dbObjInfo.getName(), "get" + dbf.getMethodName(), "()" + dbf.getDesc(),
-					false);
+			if (dbf.getDesc().equals(Type.BOOLEAN_TYPE.getDescriptor())) {
+				mv.visitMethodInsn(INVOKEVIRTUAL, dbObjInfo.getName(), "is" + dbf.getMethodName(),
+						"()" + dbf.getDesc(), false);
+			} else {
+				mv.visitMethodInsn(INVOKEVIRTUAL, dbObjInfo.getName(), "get" + dbf.getMethodName(),
+						"()" + dbf.getDesc(), false);
+			}
 			mv.visitFieldInsn(PUTFIELD, dbObjInfo.getDynName(), dbf.getName(), dbf.getDesc());
 		}
 		Label l2 = new Label();
@@ -152,6 +174,9 @@ public class POWriter implements Opcodes {
 			return true;
 		} else if (desc.equals(Type.SHORT_TYPE.getDescriptor())) {
 			mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", false);
+			return true;
+		} else if (desc.equals(Type.BOOLEAN_TYPE.getDescriptor())) {
+			mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", false);
 			return true;
 		}
 		return false;
@@ -202,10 +227,12 @@ public class POWriter implements Opcodes {
 		} else if (desc.equals(Type.SHORT_TYPE.getDescriptor())) {
 			mv.visitTypeInsn(CHECKCAST, "java/lang/Short");
 			mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", false);
+		} else if (desc.equals(Type.BOOLEAN_TYPE.getDescriptor())) {
+			mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
+			mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false);
 		} else {
 			mv.visitTypeInsn(CHECKCAST, Type.getType(desc).getInternalName());
 		}
-
 	}
 
 	private void buildMethodwrite2Dataholder() {

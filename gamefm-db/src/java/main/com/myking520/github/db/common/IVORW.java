@@ -56,4 +56,8 @@ public interface IVORW extends Cloneable {
 	public void readFromDataholder(IDataHolder dataHoder);
 
 	public IVORW clone() throws CloneNotSupportedException;
+	/**
+	 * @return new IVORW
+	 */
+	public IVORW newIVORW();
 }

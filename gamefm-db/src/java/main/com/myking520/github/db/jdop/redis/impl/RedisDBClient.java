@@ -15,10 +15,12 @@ import redis.clients.jedis.ShardedJedis;
 
 import com.myking520.github.db.jdop.IDBClient;
 import com.myking520.github.db.jdop.IData;
+import com.myking520.github.db.jdop.IQueryCallback;
 import com.myking520.github.db.jdop.redis.IMaxID;
 import com.myking520.github.db.jdop.redis.IRedisDO;
 import com.myking520.github.db.jdop.redis.IRedisTableInfo;
 import com.myking520.github.db.jdop.redis.JedisUtil;
+import com.myking520.github.db.jdop.redis.RedisConnection;
 
 /**
  * 
@@ -290,6 +292,28 @@ public class RedisDBClient implements IDBClient {
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public <O> O query(String query, Object params, IQueryCallback callback) {
+		ShardedJedis sj = null;
+		boolean error = false;
+		try {
+			RedisConnection rc = new RedisConnection(sj);
+			return callback.excute(query, params, rc);
+		} catch (Exception e) {
+			logger.error("", e);
+			error = true;
+		} finally {
+			if (sj != null) {
+				if (error) {
+					JedisUtil.returnBrokenJedis(sj);
+				} else {
+					JedisUtil.returnSharedJedis(sj);
+				}
+			}
+		}
+		return null;
 	}
 
 }

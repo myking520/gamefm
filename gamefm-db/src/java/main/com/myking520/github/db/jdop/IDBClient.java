@@ -11,4 +11,5 @@ public interface IDBClient {
 	public  <O>O findByPK(Serializable pk,IData ido);
 	public <O> void updateFK(IData ido,String fk,Object oldValue);
 	public <O>  List<O> findByFK(IData ido,Serializable rk,String pkName);
+	public <O> O query(String query,Object params,IQueryCallback callback);
 }
