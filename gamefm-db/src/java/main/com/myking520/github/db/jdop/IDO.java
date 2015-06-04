@@ -42,16 +42,4 @@ public interface IDO {
 	 */
 	public Object[] getFKs();
 
-	/**
-	 * 数据源
-	 * 
-	 * @param obj
-	 */
-	public <O> void setSouce(O obj);
-	public <O> O getSource();
-
-	/**
-	 * @return 新建
-	 */
-	public <O extends IDO> O newDO();
 }

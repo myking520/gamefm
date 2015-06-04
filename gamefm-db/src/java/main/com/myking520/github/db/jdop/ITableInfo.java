@@ -38,5 +38,5 @@ public interface ITableInfo {
 	/**
 	 * @return
 	 */
-	public IDO getIDOCreater();
+	public IPKFKGetter getPKFKGetter();
 }

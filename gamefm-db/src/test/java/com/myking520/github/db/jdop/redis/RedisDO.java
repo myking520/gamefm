@@ -43,14 +43,7 @@ public class RedisDO implements IRedisDO {
 
 		this.fks = new Object[] { this.souce.getFid(), this.souce.getMid() };
 	}
-	@Override
-	public IDO newDO() {
-		return new RedisDO();
-	}
-	@Override
-	public <O> O getSource() {
-		return (O) souce;
-	}
+	
 	@Override
 	public void createObject(byte[] bytes) {
 		ByteArrayInputStream binp = new ByteArrayInputStream(bytes);

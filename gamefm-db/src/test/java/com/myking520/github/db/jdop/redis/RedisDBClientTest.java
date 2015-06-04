@@ -79,9 +79,7 @@ public class RedisDBClientTest {
 	public void delete() {
 		DefaultData defaultdata = new DefaultData(table1, null);
 		List<CObj> lt = client.getAll(defaultdata);
-		IDO ido = defaultdata.getTableInfo().getIDOCreater();
-		ido.setSouce(lt.get(0));
-		defaultdata = new DefaultData(table1, ido);
+		defaultdata = new DefaultData(table1, lt.get(0));
 		client.delete(defaultdata);
 	}
 
@@ -92,23 +90,19 @@ public class RedisDBClientTest {
 		CObj cobj = lt.get(0);
 		int old = cobj.getMid();
 		cobj.setMid(33333);
-		IDO ido = defaultdata.getTableInfo().getIDOCreater();
-		ido.setSouce(cobj);
-		defaultdata = new DefaultData(table1, ido);
+		defaultdata = new DefaultData(table1, cobj);
 		client.updateFK(defaultdata, "fk2", old);
 	}
 
 	private DefaultData[] random(int num) {
 		DefaultData[] defaultdatas = new DefaultData[num];
 		for (int i = 0; i < num; i++) {
-			IDO ido = table1.getIDOCreater().newDO();
 			CObj cobj = new CObj();
 			cobj.setFid(1);
 			cobj.setMid(2);
 			cobj.setName("c1");
 			cobj.setId(i);
-			ido.setSouce(cobj);
-			defaultdatas[i] = new DefaultData(table1, ido);
+			defaultdatas[i] = new DefaultData(table1, cobj);
 		}
 		return defaultdatas;
 	}

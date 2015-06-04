@@ -1,11 +1,9 @@
-package com.myking520.github.db.common;
+package com.myking520.github.db.jdop;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.myking520.github.db.common.writer.POWriter;
+import java.io.Serializable;
 
 /**
+ * 主键外键获取
 Copyright (c) 2015, kongguoan
 All rights reserved.
 
@@ -31,42 +29,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public class VORWFacotory extends ClassLoader {
-	private static VORWFacotory vorwfacotory = new VORWFacotory();
-	private static Map<Class<? extends IVO>, IVORW> vorwClases = new HashMap<Class<? extends IVO>,IVORW>();
-
-	private VORWFacotory() {
-
-	}
-
-	public static IVORW getVORW(Class<? extends IVO> voclaz) {
-		IVORW vorw= vorwClases.get(voclaz);
-		if (vorw == null) {
-			try {
-				POWriter pw = new POWriter(voclaz);
-				byte[] bytes = pw.toClassBytes();
-				Class<IVORW> claz = (Class<IVORW>) vorwfacotory.defineClass(null, bytes, 0, bytes.length);
-				vorw= claz.newInstance();
-				vorwClases.put(voclaz, vorw);
-			} catch (Exception e) {
-				throw new RuntimeException("初始失败", e);
-			}
-		}
-		return vorw.newIVORW();
-	}
-
-	/**
-	 * 读写对象
-	 * 
-	 * @param vo
-	 * @return
-	 */
-	public static IVORW getVORW(IVO vo) {
-		Class<IVO> voclaz = (Class<IVO>) vo.getClass();
-		return getVORW(voclaz);
-	}
-	public static IVORW getVORW2(Object vo) {
-		Class<IVO> voclaz = (Class<IVO>) vo.getClass();
-		return getVORW(voclaz);
-	}
+public interface IPKFKGetter {
+	public Serializable getPK(Object obj);
+	public Object[] getFK(Object obj);
 }

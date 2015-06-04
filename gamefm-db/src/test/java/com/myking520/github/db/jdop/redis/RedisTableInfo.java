@@ -1,6 +1,7 @@
 package com.myking520.github.db.jdop.redis;
 
 import com.myking520.github.db.jdop.IDO;
+import com.myking520.github.db.jdop.IPKFKGetter;
 import com.myking520.github.db.jdop.redis.impl.IntMaxId;
 
 public class RedisTableInfo implements IRedisTableInfo {
@@ -9,10 +10,6 @@ public class RedisTableInfo implements IRedisTableInfo {
 	private IDO doCreater;
 	public void setDoCreater(IDO doCreater) {
 		this.doCreater = doCreater;
-	}
-	@Override
-	public IDO getIDOCreater() {
-		return doCreater;
 	}
 
 	@Override
@@ -41,6 +38,11 @@ public class RedisTableInfo implements IRedisTableInfo {
 	@Override
 	public String[] getFKNames() {
 		return fkNames;
+	}
+
+	@Override
+	public IPKFKGetter getPKFKGetter() {
+		return null;
 	}
  
 }

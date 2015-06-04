@@ -13,11 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import redis.clients.jedis.ShardedJedis;
 
+import com.myking520.github.db.common.IVORW;
+import com.myking520.github.db.common.VORWFacotory;
 import com.myking520.github.db.jdop.IDBClient;
 import com.myking520.github.db.jdop.IData;
+import com.myking520.github.db.jdop.IPKFKGetter;
 import com.myking520.github.db.jdop.IQueryCallback;
 import com.myking520.github.db.jdop.redis.IMaxID;
-import com.myking520.github.db.jdop.redis.IRedisDO;
 import com.myking520.github.db.jdop.redis.IRedisTableInfo;
 import com.myking520.github.db.jdop.redis.JedisUtil;
 import com.myking520.github.db.jdop.redis.RedisConnection;
@@ -58,17 +60,21 @@ public class RedisDBClient implements IDBClient {
 		ShardedJedis sj = null;
 		boolean error = false;
 		IRedisTableInfo tinfo = (IRedisTableInfo) datas[0].getTableInfo();
+		IPKFKGetter pkfkgetter = tinfo.getPKFKGetter();
 		try {
 			sj = JedisUtil.getSharedJedis();
 			for (int i = 0; i < datas.length; i++) {
 				IData data = datas[i];
-				IRedisDO ido = (IRedisDO) data.getDO();
 				Map<byte[], byte[]> dataMap = new HashMap<byte[], byte[]>();
-				Object pk = ido.getPrimaryKey();
-				Object[] fks = ido.getFKs();
+				Object pk = data.getPrimaryKey();
+				Object[] fks = data.getFKs();
 				tinfo.getMaxIDProcess().saveMaxID(tinfo.getTableName4Bytes(), pk, sj);
 				byte[] pkvalue = pk.toString().getBytes(IMaxID.CHARSET);
-				dataMap.put(pkvalue, ido.getData());
+				IVORW vorw = VORWFacotory.getVORW2(data.getSource());
+				RedisDataHodler redisDataHodler = new RedisDataHodler();
+				vorw.readFromVO(data.getSource());
+				vorw.write2Dataholder(redisDataHodler);
+				dataMap.put(pkvalue, redisDataHodler.toBytes());
 				sj.hmset(tinfo.getTableName4Bytes(), dataMap);
 				if (fks != null && fks.length > 0) {
 					for (int i1 = 0; i1 < tinfo.getFKNames().length; i1++) {
@@ -117,9 +123,9 @@ public class RedisDBClient implements IDBClient {
 			sj = JedisUtil.getSharedJedis();
 			for (int i = 0; i < datas.length; i++) {
 				IData data = datas[i];
-				IRedisDO ido = (IRedisDO) data.getDO();
-				sj.hdel(tinfo.getTableName4Bytes(), ido.getPrimaryKey().toString().getBytes(IMaxID.CHARSET));
-				Object[] fkValues = ido.getFKs();
+
+				sj.hdel(tinfo.getTableName4Bytes(), data.getPrimaryKey().toString().getBytes(IMaxID.CHARSET));
+				Object[] fkValues = data.getFKs();
 				if (tinfo.getFKNames() != null) {
 					for (int i1 = 0; i1 < tinfo.getFKNames().length; i1++) {
 						String fkName = tinfo.getFKNames()[i1];
@@ -128,7 +134,7 @@ public class RedisDBClient implements IDBClient {
 						if (fkValues[i1] == null) {
 							continue;
 						}
-						this.delFk(tinfo.getTableName(), fkName, fkValues[i1], ido.getPrimaryKey(), sj);
+						this.delFk(tinfo.getTableName(), fkName, fkValues[i1], data.getPrimaryKey(), sj);
 					}
 				}
 			}
@@ -160,7 +166,6 @@ public class RedisDBClient implements IDBClient {
 		ShardedJedis sj = null;
 		boolean error = false;
 		IRedisTableInfo tinfo = (IRedisTableInfo) data.getTableInfo();
-		IRedisDO rdido = (IRedisDO) data.getDO();
 		int index = -1;
 		for (int i = 0; i < tinfo.getFKNames().length; i++) {
 			String fkname = tinfo.getFKNames()[i];
@@ -173,9 +178,9 @@ public class RedisDBClient implements IDBClient {
 		}
 		try {
 			sj = JedisUtil.getSharedJedis();
-			this.delFk(tinfo.getTableName(), fk, oldValue, rdido.getPrimaryKey(), sj);
-			String fkTableName = this.getFkTableName(tinfo.getTableName(), fk, rdido.getFKs()[index]);
-			this.saveFK(fkTableName, rdido.getPrimaryKey().toString().getBytes(IMaxID.CHARSET), sj);
+			this.delFk(tinfo.getTableName(), fk, oldValue, data.getPrimaryKey(), sj);
+			String fkTableName = this.getFkTableName(tinfo.getTableName(), fk, data.getFKs()[index]);
+			this.saveFK(fkTableName, data.getPrimaryKey().toString().getBytes(IMaxID.CHARSET), sj);
 		} catch (Exception e) {
 			logger.error("", e);
 			error = true;
@@ -196,16 +201,13 @@ public class RedisDBClient implements IDBClient {
 		List<O> ret = new ArrayList<O>();
 		boolean error = false;
 		IRedisTableInfo tinfo = (IRedisTableInfo) ido.getTableInfo();
-		IRedisDO redisDO = (IRedisDO) tinfo.getIDOCreater();
 		try {
 			sj = JedisUtil.getSharedJedis();
 			Collection<byte[]> datas = sj.hvals(tinfo.getTableName4Bytes());
 			for (byte[] data : datas) {
 				if (data == null)
 					continue;
-				redisDO = redisDO.newDO();
-				redisDO.createObject(data);
-				ret.add(redisDO.getSource());
+				// TODO 返回对象
 			}
 		} catch (Exception e) {
 			logger.error("", e);
@@ -227,15 +229,14 @@ public class RedisDBClient implements IDBClient {
 		ShardedJedis sj = null;
 		boolean error = false;
 		IRedisTableInfo tinfo = (IRedisTableInfo) ido.getTableInfo();
-		IRedisDO rdido = (IRedisDO) tinfo.getIDOCreater().newDO();
 		O ret = null;
 		try {
 			sj = JedisUtil.getSharedJedis();
 			byte[] bytes = sj.hget(tinfo.getTableName4Bytes(), pk.toString().getBytes(IMaxID.CHARSET));
 			if (bytes != null) {
-				rdido.createObject(bytes);
+				// TODO 返回对象
 			}
-			return rdido.getSource();
+			return null;
 		} catch (Exception e) {
 			logger.error("", e);
 			error = true;
@@ -257,7 +258,6 @@ public class RedisDBClient implements IDBClient {
 		List<O> ret = new ArrayList<O>();
 		boolean error = false;
 		IRedisTableInfo tinfo = (IRedisTableInfo) ido.getTableInfo();
-		IRedisDO rdido = (IRedisDO) tinfo.getIDOCreater();
 		String fkTableName = this.getFkTableName(tinfo.getTableName(), fkName, fkv);
 		try {
 			sj = JedisUtil.getSharedJedis();
@@ -270,9 +270,7 @@ public class RedisDBClient implements IDBClient {
 				for (int i = 0; i < len; i++) {
 					byte[] data = datas.get(i);
 					if (data != null) {
-						rdido = (IRedisDO) rdido.newDO();
-						rdido.createObject(data);
-						ret.add(rdido.getSource());
+						// TODO 返回对象
 					} else {
 						logger.error("没有数据" + fkv);
 					}

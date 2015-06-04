@@ -1,5 +1,7 @@
 package com.myking520.github.db.jdop;
 
+import java.io.Serializable;
+
 /**
 Copyright (c) 2015, kongguoan
 All rights reserved.
@@ -28,5 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public interface IData {
 	public	ITableInfo getTableInfo();
-	public	IDO getDO();
+	public <O> O getSource();
+	public Serializable getPrimaryKey();
+	public Object[] getFKs();
 }
