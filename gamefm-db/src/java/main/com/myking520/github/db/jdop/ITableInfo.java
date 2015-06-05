@@ -36,7 +36,8 @@ public interface ITableInfo {
 	 */
 	public String[] getFKNames();
 	/**
+	 * 对象主键。外键。新建
 	 * @return
 	 */
-	public IPKFKGetter getPKFKGetter();
+	public IDOPS getDOPS();
 }

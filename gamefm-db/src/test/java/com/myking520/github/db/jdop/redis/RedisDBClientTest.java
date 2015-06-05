@@ -44,7 +44,7 @@ public class RedisDBClientTest {
 		table1 = new RedisTableInfo();
 		table1.setFkNames(new String[] { "fk1", "fk2" });
 		table1.setTableName("tbTest");
-		table1.setIpkfkgetter(new COBJPK());
+		table1.setDOPS(new COBJPK());
 
 	}
 

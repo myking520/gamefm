@@ -17,7 +17,7 @@ import com.myking520.github.db.common.IVORW;
 import com.myking520.github.db.common.VORWFacotory;
 import com.myking520.github.db.jdop.IDBClient;
 import com.myking520.github.db.jdop.IData;
-import com.myking520.github.db.jdop.IPKFKGetter;
+import com.myking520.github.db.jdop.IDOPS;
 import com.myking520.github.db.jdop.IQueryCallback;
 import com.myking520.github.db.jdop.redis.IMaxID;
 import com.myking520.github.db.jdop.redis.IRedisTableInfo;
@@ -60,7 +60,7 @@ public class RedisDBClient implements IDBClient {
 		ShardedJedis sj = null;
 		boolean error = false;
 		IRedisTableInfo tinfo = (IRedisTableInfo) datas[0].getTableInfo();
-		IPKFKGetter pkfkgetter = tinfo.getPKFKGetter();
+		IDOPS dops = tinfo.getDOPS();
 		try {
 			sj = JedisUtil.getSharedJedis();
 			for (int i = 0; i < datas.length; i++) {

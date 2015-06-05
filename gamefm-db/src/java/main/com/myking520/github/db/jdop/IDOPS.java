@@ -3,7 +3,7 @@ package com.myking520.github.db.jdop;
 import java.io.Serializable;
 
 /**
- * 主键外键获取
+ * 对象主键外键获取。和对象新建
 Copyright (c) 2015, kongguoan
 All rights reserved.
 
@@ -29,7 +29,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-public interface IPKFKGetter {
+public interface IDOPS {
 	public Serializable getPK(Object obj);
 	public Object[] getFK(Object obj);
+	public <O>O newObject();
 }

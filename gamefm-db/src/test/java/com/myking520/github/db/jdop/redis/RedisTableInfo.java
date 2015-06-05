@@ -1,12 +1,12 @@
 package com.myking520.github.db.jdop.redis;
 
-import com.myking520.github.db.jdop.IPKFKGetter;
+import com.myking520.github.db.jdop.IDOPS;
 import com.myking520.github.db.jdop.redis.impl.IntMaxId;
 
 public class RedisTableInfo implements IRedisTableInfo {
 	private String tableName;
 	private String[] fkNames;
-	private IPKFKGetter ipkfkgetter;
+	private IDOPS dops;
 	@Override
 	public IMaxID getMaxIDProcess() {
 		return new IntMaxId();
@@ -35,12 +35,13 @@ public class RedisTableInfo implements IRedisTableInfo {
 	}
 
 	@Override
-	public IPKFKGetter getPKFKGetter() {
-		return ipkfkgetter;
+	public IDOPS getDOPS() {
+		return dops;
 	}
 
-	public void setIpkfkgetter(IPKFKGetter ipkfkgetter) {
-		this.ipkfkgetter = ipkfkgetter;
+	public void setDOPS(IDOPS ipkfkgetter) {
+		this.dops = ipkfkgetter;
 	}
+
 
 }

@@ -46,10 +46,10 @@ public class DefaultData implements IData {
 		return (O) souce;
 	}
 	public Serializable getPrimaryKey() {
-		return this.tinfo.getPKFKGetter().getPK(this.souce);
+		return this.tinfo.getDOPS().getPK(this.souce);
 	}
 	public Object[] getFKs() {
-		return  this.tinfo.getPKFKGetter().getFK(this.souce);
+		return  this.tinfo.getDOPS().getFK(this.souce);
 	}
 
 }
